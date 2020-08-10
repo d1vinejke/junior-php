@@ -2,7 +2,7 @@
 # DEMO - https://d1vine.online/temp/html
 +Added [ORM Library - RedBeanPHP]
 
-+Added jquary
++Added jquery
 
 Дано:
 Есть база MySQL с данными и свёрстанная HTML-страница. Неоднозначные ситуации решать на своё усмотрение.
