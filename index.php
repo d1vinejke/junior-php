@@ -1,7 +1,7 @@
 <?php
     require 'db.php'; //db connection
 
-    function CBR_XML_Daily_Ru() {
+    function CBR_XML_Daily_Ru() { //API for currency
         static $rates;
         if ($rates === null) {
             $rates = json_decode(file_get_contents('https://www.cbr-xml-daily.ru/daily_json.js'));
@@ -76,8 +76,8 @@
                 }
                 $a = 0;
                 while ($getTableAuthor = $getTableAuthors->next()){
-                    $AuthorArray[$a] = $getTableAuthor->id;
-                    $a++;
+                    $AuthorArray[$a] = $getTableAuthor->id; //fill in array @ids@ data  
+                    $a++; //increment for iteration
                 }
             }
             $k = 0;
@@ -85,17 +85,17 @@
             while ($gotTableBooks = $getTableBooks->next()){
                 $author_id = $gotTableBooks->author_id;
                 $genre_id = $gotTableBooks->genre_id;
-                $loadGenre = R::load("genres", $loadBooks[$AuthorArray[$k]]->genre_id);
-                $loadAuthor = R::load("authors", $loadBooks[$AuthorArray[$k]]->author_id);
-                $timestamp = strtotime($gotTableBooks->publication_date);
-                $year = date('Y', $timestamp);
+                $loadGenre = R::load("genres", $loadBooks[$AuthorArray[$k]]->genre_id); //Getting table @genres@ and loading sorted @genre@ identificators  
+                $loadAuthor = R::load("authors", $loadBooks[$AuthorArray[$k]]->author_id); //Getting table @authors@ and loading sorted @author@ identificators  
+                $timestamp = strtotime($gotTableBooks->publication_date); // Getting publication date and converting this to time
+                $year = date('Y', $timestamp); //taking only @year@ from publication date
                 if(mb_strlen($gotTableBooks->description) > 200){
-                    $text = trim(substr($gotTableBooks->description,0, strripos(substr($gotTableBooks->description,0,370),' ')), "\,");
+                    $text = trim(substr($gotTableBooks->description,0, strripos(substr($gotTableBooks->description,0,370),' ')), "\,"); // cutting strings > 200 symbols and deleting @,@ in end of each sentence
                 }
-                else $text = $gotTableBooks->description;
+                else $text = $gotTableBooks->description; //if text < then 200 symbols, just show
                 $avtor = R::load('authors', $author_id);
                 $genres = R::load('genres', $genre_id);
-                if($get_mode == "author_up" || $get_mode == "author_down"){
+                if($get_mode == "author_up" || $get_mode == "author_down"){ //Sorting for author_down and author_up 
                     $gotTableBooks->name = $loadBooks[$AuthorArray[$k]]->name;
                     $avtor->name = $loadAuthor->name;
                     $genres->name = $loadGenre->name;
@@ -155,28 +155,28 @@
                     </article>
         <?php
                 //Min. && Max. year
-                $dateArray[$k] = [intval($year)];
-                $tempArray1[$k] = $dateArray[$k][0];
+                $dateArray[$k] = [intval($year)]; //fill in data from DB 
+                $tempArray1[$k] = $dateArray[$k][0]; //refill in years to array
                 //Average price
-                $array[$k] = [intval(round($gotTableBooks->price))];
-                $res += array_sum($array[$k]);
+                $array[$k] = [intval(round($gotTableBooks->price))]; //rounding prices and converting to integer
+                $res += array_sum($array[$k]); //finding sum
                     //top3 places of max price
-                    $tempArray2[$k] = $array[$k][0];
+                    $tempArray2[$k] = $array[$k][0]; 
                     $tempArray3[$k] = $array[$k][0];
                     rsort($tempArray2);
-                    $tempArray2 = array_slice($tempArray2, 0, 3);
-                $k++;
+                    $tempArray2 = array_slice($tempArray2, 0, 3); //cutting first 3 index from array
+                $k++; //increment
             }
             $min = min($tempArray1);
             $max = max($tempArray1);
-            if($get_mode == NULL) {
+            if($get_mode == NULL) { //this constraction neccessery, if order_mode is empty
                 for ($z = 0; $z < 3; $z++) {
                     $sArray[$z] = array_search($tempArray2[$z], $tempArray3);
                     $sArray[$z] += 1;
                 }
                 $load = R::loadAll("books", $sArray);
             }
-            else {
+            else { //if order_mode isn't `NULL`
                 $reloadCollections = R::findCollection("books");
                 $i = 0;
                 while ($reloadCollection = $reloadCollections->next()){
@@ -241,7 +241,7 @@
             src="https://code.jquery.com/jquery-3.5.1.js"
             integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
             crossorigin="anonymous"></script>
-    <script>
+    <script> //this script for sorting button, he's needed for add classes to link @is-active@
         (function($){
 
             var $curURL = document.location.href;
