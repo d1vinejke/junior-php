@@ -92,7 +92,7 @@
                 if(mb_strlen($gotTableBooks->description) > 200){
                     $text = trim(substr($gotTableBooks->description,0, strripos(substr($gotTableBooks->description,0,370),' ')), "\,"); // cutting strings > 200 symbols and deleting @,@ in end of each sentence
                 }
-                else $text = $gotTableBooks->description; //if text < then 200 symbols, just show
+                else $text = $gotTableBooks->description; //if text < than 200 symbols, just show
                 $avtor = R::load('authors', $author_id);
                 $genres = R::load('genres', $genre_id);
                 if($get_mode == "author_up" || $get_mode == "author_down"){ //Sorting for author_down and author_up 
