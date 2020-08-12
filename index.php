@@ -233,7 +233,7 @@
         </form>
         <?php
             if(isset($_POST['print'])){
-                header("Location: pdfCreator.php");
+                echo '<meta http-equiv="REFRESH" content="0;URL=pdfCreator.php">';
             }
         ?>
     </div>
